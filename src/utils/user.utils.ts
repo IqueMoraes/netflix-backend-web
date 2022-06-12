@@ -1,6 +1,6 @@
 import movies from "../db/movies";
-import { Movie } from "../types/movies.types";
-import { User } from "../types/user.types";
+import { Movie } from "../interfaces/movies.interface";
+import { User } from "../interfaces/user.types";
 
 function updateMovieAtUsersList(movie: Movie, user: User): User {
   if (user.myList.includes(movie)) {
@@ -26,7 +26,7 @@ function updateManyMoviesAtUsersList(user: User, ...ids: string[]): User {
       throw new Error("Filme já está na lista do usuário");
     }
     const movie = movies.find((m) => m.id === id);
-    newList.push(movie);
+    if (movie) newList.push(movie);
   });
 
   return {

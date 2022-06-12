@@ -1,4 +1,4 @@
-import { Movie } from "./movies.types";
+import { Movie } from "./movies.interface";
 
 interface User {
   name: string;
