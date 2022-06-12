@@ -1,5 +1,13 @@
-import { Movie, MovieWithAverage } from "../types/movies.types";
-import { User } from "../types/user.types";
+import { Movie, Average, MoviesFromApiDTO } from "../interfaces/movies.interface";
+import { User } from "../interfaces/user.types";
+import MovieService from "../services/Movie.service";
+
+
+function findMovie(movies: Movie[], id: number): Movie | undefined{
+  const movie = movies.find((m: Movie) => m.id === id)
+  return movie;
+}
+
 
 function orderByAverageRate(movies: Movie[]) {
   const moviesWithAverage = calculateMoviesAverage(movies);
@@ -19,17 +27,17 @@ function orderByAverageRate(movies: Movie[]) {
   return moviesOrdered;
 }
 
-function filterMoviesByIndicativeRating(movies: Movie[], user: User): Movie[] {
-  return movies.filter((movie) => {
-    return movie.indicativeRating <= user.age;
-  });
-}
+// function filterMoviesByIndicativeRating(movies: Movie[], user: User): Movie[] {
+//   return movies.filter((movie) => {
+//     return movie.indicativeRating <= user.age;
+//   });
+// }
 
 function removeMovieWithoutRatings(movies: Movie[]) {
   return movies.filter((movie) => movie.ratings.length !== 0);
 }
 
-function calculateMoviesAverage(movies: Movie[]): MovieWithAverage[] {
+function calculateMoviesAverage(movies: Movie[]): Average[] {
   const sanitizedMovies = removeMovieWithoutRatings(movies);
 
   return sanitizedMovies.map((movie) => {
@@ -48,7 +56,8 @@ function calculateMoviesAverage(movies: Movie[]): MovieWithAverage[] {
 
 export {
   orderByAverageRate,
-  filterMoviesByIndicativeRating,
+  // filterMoviesByIndicativeRating,
   removeMovieWithoutRatings,
   calculateMoviesAverage,
+  findMovie
 };
