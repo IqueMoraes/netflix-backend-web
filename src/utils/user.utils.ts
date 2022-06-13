@@ -1,4 +1,3 @@
-import movies from "../db/movies";
 import { Movie } from "../interfaces/movies.interface";
 import { User } from "../interfaces/user.types";
 
@@ -15,18 +14,23 @@ function updateMovieAtUsersList(movie: Movie, user: User): User {
 }
 
 //função pura
-function updateManyMoviesAtUsersList(user: User, ...ids: string[]): User {
+function updateManyMoviesAtUsersList(user: User,  movies:Movie[], ...ids: number[]): User {
   const newList: Movie[] = [];
 
-  ids.forEach((id: string) => {
-    if (!movies.some((m) => m.id === id)) {
-      throw new Error("Filme não está no catálogo disponível");
+  ids.forEach((id: number) => {
+    try {
+      if (!movies.some((m) => m.id === id)) {
+        throw new Error("Filme não está no catálogo disponível");
+      }
+      if (user.myList.some(m => m.id === id)){
+        throw new Error("Filme já está na lista do usuário");
+      }
+      const movie = movies.find((m) => m.id === id);
+      if (movie) newList.push(movie);
+    } catch(e){
+      console.log(e);
     }
-    if (user.myList.some(m => m.id === id)){
-      throw new Error("Filme já está na lista do usuário");
-    }
-    const movie = movies.find((m) => m.id === id);
-    if (movie) newList.push(movie);
+
   });
 
   return {
@@ -38,4 +42,4 @@ function updateManyMoviesAtUsersList(user: User, ...ids: string[]): User {
   };
 }
 
-export { updateMovieAtUsersList };
+export { updateMovieAtUsersList, updateManyMoviesAtUsersList };
