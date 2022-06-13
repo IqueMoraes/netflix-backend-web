@@ -1,6 +1,4 @@
 import { Movie, Average, MoviesFromApiDTO } from "../interfaces/movies.interface";
-import { User } from "../interfaces/user.types";
-import MovieService from "../services/Movie.service";
 
 
 function findMovie(movies: Movie[], id: number): Movie | undefined{
@@ -8,6 +6,37 @@ function findMovie(movies: Movie[], id: number): Movie | undefined{
   return movie;
 }
 
+// function filterMoviesByIndicativeRating(movies: Movie[], user: User): Movie[] {
+  //   return movies.filter((movie) => {
+    //     return movie.indicativeRating <= user.age;
+    //   });
+    // }
+    
+function removeMovieWithoutRatings(movies: Movie[]) {
+  return movies.filter((movie) => movie.ratings.length !== 0);
+}
+function calculateAverage(movie: Movie): number {
+  const initialValue = 0;
+  const length = movie.ratings.length;
+  const sumFn = (previous: number, current: number) => previous + current;
+  
+  const average = movie.ratings.reduce(sumFn, initialValue) / length;
+  return average;
+}
+
+function calculateMoviesAverage(movies: Movie[]): Average[] {
+  const sanitizedMovies = removeMovieWithoutRatings(movies);
+  
+  return sanitizedMovies.map((movie) => {
+    console.log(movie);
+    const average = calculateAverage(movie);
+    
+    return {
+      ...movie,
+      average,
+    };
+  });
+}
 
 function orderByAverageRate(movies: Movie[]) {
   const moviesWithAverage = calculateMoviesAverage(movies);
@@ -23,41 +52,29 @@ function orderByAverageRate(movies: Movie[]) {
 
     return 0;
   });
-
+  console.log("este é o movies ordered", moviesOrdered );
   return moviesOrdered;
 }
 
-// function filterMoviesByIndicativeRating(movies: Movie[], user: User): Movie[] {
-//   return movies.filter((movie) => {
-//     return movie.indicativeRating <= user.age;
-//   });
-// }
+function listByName(movies: Movie[]): void {
+  movies.map((movie) => {
+    return console.log(`${movie.id}- ${movie.name}`)
+  })
 
-function removeMovieWithoutRatings(movies: Movie[]) {
-  return movies.filter((movie) => movie.ratings.length !== 0);
 }
 
-function calculateMoviesAverage(movies: Movie[]): Average[] {
-  const sanitizedMovies = removeMovieWithoutRatings(movies);
-
-  return sanitizedMovies.map((movie) => {
-    const initialValue = 0;
-    const length = movie.ratings.length;
-    const sumFn = (previous: number, current: number) => previous + current;
-
-    const average = movie.ratings.reduce(sumFn, initialValue) / length;
-
-    return {
-      ...movie,
-      average,
-    };
-  });
+function listByRating(movies: Movie[]): void {
+  movies.map((movie) => {
+    return console.log(`${movie.name} - Avaliação: ${calculateAverage(movie)} - Numeração: ${movie.id}`)
+  })
 }
+
 
 export {
   orderByAverageRate,
-  // filterMoviesByIndicativeRating,
   removeMovieWithoutRatings,
   calculateMoviesAverage,
-  findMovie
+  findMovie,
+  listByName,
+  listByRating
 };

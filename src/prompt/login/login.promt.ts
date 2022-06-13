@@ -2,7 +2,7 @@ import { Bruno, Cris, Luana, Pedro } from "../../db/users";
 
 
 const users = [Luana, Pedro, Bruno, Cris].map((user, i) => {
-  return `\n ${i+1} - ${user.name} \n`
+  return `${i+1} - ${user.name} \n`
 })
 
 const login = [
@@ -10,7 +10,7 @@ const login = [
     type: "input",
     name: "option",
     message:
-      `Escolha seu perfil para logar: ${users.join('')} ou digite 5 para sair.\n`,
+      `Escolha seu perfil para logar:\n${users.join('')}ou digite 0 para sair.\n`,
   },
 ];
 
